@@ -6,9 +6,7 @@
             <div class="w-full md:w-1/2 p-4 md:p-8 overflow-y-auto">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
-                        <span class="material-icons text-white">
-                            bolt
-                        </span>
+                        <img src="../assets/electric_bolt-white.svg" alt="">
                     </div>
                     <span class="text-xl font-semibold text-gray-800">Demo Auth</span>
                 </div>
@@ -46,8 +44,8 @@
                         <div class="relative">
                             <input v-model="registerForm.email" type="email" placeholder="Enter your email" required
                                 class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
-                            <span class="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                                email
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 ">
+                                <img src="../assets/mail-gray-500.svg" alt="">
                             </span>
                         </div>
                     </div>
@@ -60,8 +58,8 @@
                                 placeholder="Enter your password" required
                                 class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
                             <span @click="togglePassword"
-                                class="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-10">
-                                {{ showPassword ? 'visibility_off' : 'visibility' }}
+                                class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10">
+                                <img :src="showPassword ? eyeOff : eye" alt="">
                             </span>
                         </div>
                     </div>
@@ -73,8 +71,8 @@
                             <input v-model="registerForm.phone" type="tel" placeholder="Enter your number phone"
                                 required
                                 class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
-                            <span class="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                                phone
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 ">
+                                <img src="../assets/call-gray-500.svg" alt="">
                             </span>
                         </div>
                     </div>
@@ -118,6 +116,8 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import eye from '../assets/visibility-gray-500.svg'
+import eyeOff from '../assets/visibility_off-gray-500.svg'
 
 const showPassword = ref(false);
 

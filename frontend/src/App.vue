@@ -5,9 +5,9 @@ import Register from './components/Register.vue';
 </script>
 
 <template>
-  <!-- <Login /> -->
+  <Login />
   <!-- <Register /> -->
-  <Dashboard />
+  <!-- <Dashboard /> -->
 </template>
 
 <style scoped></style>

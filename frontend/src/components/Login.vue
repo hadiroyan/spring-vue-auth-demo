@@ -5,9 +5,7 @@
             <div class="w-full md:w-1/2 p-8 md:p-12">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
-                        <span class="material-icons text-white">
-                            bolt
-                        </span>
+                        <img src="../assets/electric_bolt-white.svg" alt="">
                     </div>
                     <span class="text-xl font-semibold text-gray-800">Demo Auth</span>
                 </div>
@@ -23,8 +21,8 @@
                             <input v-model="loginForm.email" type="text" placeholder="Enter your email"
                                 class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
 
-                            <span class="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                                email
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 ">
+                                <img src="../assets/mail-gray-500.svg" alt="">
                             </span>
                         </div>
                     </div>
@@ -33,11 +31,12 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                         <div class="relative">
-                            <input v-model="loginForm.password" type="password" placeholder="Enter your password"
+                            <input v-model="loginForm.password" :type="showPassword ? 'text' : 'password'"
+                                placeholder="Enter your password"
                                 class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" />
-                            <span @click="showPassword = !showPassword"
-                                class="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer select-none">
-                                {{ showPassword ? 'visibility_off' : 'visibility' }}
+                            <span @click="togglePassword"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10">
+                                <img :src="showPassword ? eyeOff : eye" alt="">
                             </span>
                         </div>
                     </div>
@@ -46,10 +45,9 @@
                     <button type="submit"
                         class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2">
                         Sign In
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
+                        <span>
+                            <img src="../assets/arrow_right-white.svg" alt="">
+                        </span>
                     </button>
                 </form>
 
@@ -63,7 +61,7 @@
             </div>
 
             <!-- Right Side -->
-            <div 
+            <div
                 class="hidden md:flex md:w-1/2 bg-linear-to-br from-blue-600 to-blue-700 p-12 items-center justify-center text-white relative overflow-hidden">
                 <div class="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
                 <div class="absolute bottom-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
@@ -85,6 +83,8 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import eye from '../assets/visibility-gray-500.svg'
+import eyeOff from '../assets/visibility_off-gray-500.svg'
 
 const loginForm = reactive({
     email: '',
@@ -97,4 +97,9 @@ const handleLogin = () => {
     console.log('Login:', loginForm);
     // login logic
 };
+
+const togglePassword = () => {
+    showPassword.value = !showPassword.value
+}
+
 </script>
