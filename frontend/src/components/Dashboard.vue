@@ -56,6 +56,9 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const user = ref({
     username: '',
     firstName: '',
@@ -65,5 +68,6 @@ const user = ref({
 
 const handleLogout = () => {
     // Logout logic
+    router.push('/login')
 };
 </script>

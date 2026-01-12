@@ -83,9 +83,12 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import eye from '../assets/visibility-gray-500.svg'
 import eyeOff from '../assets/visibility_off-gray-500.svg'
 
+const router = useRouter();
 const loginForm = reactive({
     email: '',
     password: ''
@@ -94,8 +97,13 @@ const loginForm = reactive({
 const showPassword = ref(false);
 
 const handleLogin = () => {
-    console.log('Login:', loginForm);
-    // login logic
+    console.log("Handle login .....")
+
+    // Login (Simulation)
+    setTimeout(() => {
+        console.log('Login:', loginForm);
+        router.push('/dashboard');
+    }, 1000);
 };
 
 const togglePassword = () => {

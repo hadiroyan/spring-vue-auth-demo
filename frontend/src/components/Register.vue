@@ -85,11 +85,11 @@
                 </form>
 
                 <!-- Sign In Link -->
-                <p class="mt-6 mb-4 text-center text-gray-600">
+                <p class="mt-6 mb-8 text-center text-gray-600">
                     Already have an account?
-                    <a href="/login" class="text-blue-600 hover:underline font-semibold">
+                    <router-link to="/login" class="text-blue-600 hover:underline font-semibold">
                         Sign in
-                    </a>
+                    </router-link>
                 </p>
             </div>
 
@@ -116,11 +116,14 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import eye from '../assets/visibility-gray-500.svg'
 import eyeOff from '../assets/visibility_off-gray-500.svg'
 
 const showPassword = ref(false);
 
+const router = useRouter();
 const registerForm = reactive({
     firstName: '',
     lastName: '',
@@ -130,8 +133,16 @@ const registerForm = reactive({
 });
 
 const handleRegister = () => {
-    console.log('Register:', registerForm);
-    // Registration logic
+    console.log('Handle registration......')
+    // Register (simulation)
+    setTimeout(() => {
+
+        console.log('Register:', registerForm);
+        setTimeout(() => {
+            router.push('/login');
+        }, 1000);
+
+    }, 1000);
 };
 
 const togglePassword = () => {
