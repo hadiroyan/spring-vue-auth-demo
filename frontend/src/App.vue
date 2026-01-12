@@ -5,7 +5,8 @@ import Register from './components/Register.vue';
 </script>
 
 <template>
-  <Login />
+  <RouterView/>
+  <!-- <Login /> -->
   <!-- <Register /> -->
   <!-- <Dashboard /> -->
 </template>
