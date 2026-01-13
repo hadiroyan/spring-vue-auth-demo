@@ -37,4 +37,5 @@ build/
 
 ### Keys
 /src/main/resources/keys/private.pem
+/src/main/resources/keys/private_pkcs8.pem
 /src/main/resources/keys/public.pem

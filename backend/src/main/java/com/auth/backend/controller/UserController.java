@@ -3,7 +3,9 @@ package com.auth.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +31,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserProfile(Authentication authentication) {
+        User user = userService.getUserByEmail(authentication.getName());
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<User> create(@RequestBody UserDto userDto) {
         User userRequest = User.builder()
@@ -36,7 +44,7 @@ public class UserController {
                 .enabled(true)
                 .role(Role.USER)
                 .build();
-                
+
         BeanUtils.copyProperties(userDto, userRequest);
         return ResponseEntity.ok(userService.createUser(userRequest));
     }
