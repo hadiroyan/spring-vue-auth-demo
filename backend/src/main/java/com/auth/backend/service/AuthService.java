@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,10 @@ import com.auth.backend.util.CookieUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -91,17 +94,21 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(LoginRequest request, HttpServletResponse response) {
+        log.info("Login for email {}", request.getEmail());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
+        log.info("Finish authenctication {}", authentication.getName());
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new RuntimeException("User not found"));
+                () -> new UsernameNotFoundException("User not found"));
 
         String accessToken = jwtService.generateAccessToken(authentication);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        log.info("Finish create token");
 
         cookieUtil.addCookie(response, "access_token", accessToken, (int) accessTokenExpiration);
         cookieUtil.addCookie(response, "refresh_token", refreshToken.getToken(), (int) refreshTokenExpiration);
+        log.info("Finish add cookie");
 
         return AuthResponse.builder()
                 .success(true)

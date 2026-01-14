@@ -65,7 +65,7 @@
                     </div>
 
                     <!-- Phone -->
-                    <div>
+                    <!-- <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Number Phone</label>
                         <div class="relative">
                             <input v-model="registerForm.phone" type="tel" placeholder="Enter your number phone"
@@ -75,7 +75,7 @@
                                 <img src="../assets/call-gray-500.svg" alt="">
                             </span>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Sign Up Button -->
                     <button type="submit"
@@ -117,32 +117,36 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import api from '../api';
 
 import eye from '../assets/visibility-gray-500.svg'
 import eyeOff from '../assets/visibility_off-gray-500.svg'
 
+const error = ref(null);
 const showPassword = ref(false);
 
 const router = useRouter();
 const registerForm = reactive({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
-    phone: ''
+    firstName: '',
+    lastName: '',
 });
 
-const handleRegister = () => {
+const handleRegister = async () => {
     console.log('Handle registration......')
-    // Register (simulation)
-    setTimeout(() => {
 
+    try {
         console.log('Register:', registerForm);
-        setTimeout(() => {
-            router.push('/login');
-        }, 1000);
+        const response = await api.post('/auth/register', registerForm);
+        console.log(response.data);
 
-    }, 1000);
+        // Go to dashboard
+        router.push('/dashboard');
+    } catch (err) {
+        error.value = 'Sser failed to register'
+        console.error(`Failed register ${err}`)
+    }
 };
 
 const togglePassword = () => {

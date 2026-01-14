@@ -84,6 +84,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import api from '../api'
 
 import eye from '../assets/visibility-gray-500.svg'
 import eyeOff from '../assets/visibility_off-gray-500.svg'
@@ -94,16 +95,23 @@ const loginForm = reactive({
     password: ''
 });
 
+const error = ref(null);
 const showPassword = ref(false);
 
-const handleLogin = () => {
+const handleLogin = async () => {
     console.log("Handle login .....")
 
-    // Login (Simulation)
-    setTimeout(() => {
-        console.log('Login:', loginForm);
+    try {
+        // console.log('Login:', loginForm);
+        const response = await api.post('/auth/login', loginForm);
+        console.log(response.data);
+
+        // Go to dashboard
         router.push('/dashboard');
-    }, 1000);
+    } catch (err) {
+        error.value = 'User failed to login'
+        console.error(`Failed login ${err}`)
+    }
 };
 
 const togglePassword = () => {

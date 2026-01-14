@@ -65,14 +65,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http:localhost://5173", "http:localhost://8080"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTION"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // cookies
 
-        UrlBasedCorsConfigurationSource sourse = new UrlBasedCorsConfigurationSource();
-        sourse.registerCorsConfiguration("/**", configuration);
-        return sourse;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
