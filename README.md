@@ -9,6 +9,7 @@ A simple authentication demo project using Spring Boot as backend and Vue.js 3 w
 - Java 17
 - Spring Boot 4.0.1
 - Maven
+- PostgreSQL
 
 ### Frontend
 
@@ -37,16 +38,28 @@ spring-vue-auth-demo/
 ### 1. Backend Setup (Spring Boot)
 
 Prerequisites
+
 - Java 17+
 - Maven
+- PostgreSQL
 
 #### Environment Configuration
+
 ```bash
 cd backend
 cp src/main/resources/application-example.properties src/main/resources/application.properties
 ```
 
+Enter values in application.properties
+
+```text
+!IMPORTANT
+Create a private key and public key for Spring Security.
+Then save it in backend/src/main/resources/keys
+```
+
 #### Run Backend
+
 ```bash
 mvn spring-boot:run
 ```
@@ -54,17 +67,21 @@ mvn spring-boot:run
 Backend will run at: http://localhost:8080
 
 ### 2. Frontend Setup (Vue + vite)
+
 Prerequisites
+
 - Node.js (v20+)
 - npm
 
 #### Install Dependencies
+
 ```bash
 cd frontend
 npm install
 ```
 
 #### Run Frontend
+
 ```bash
 npm run dev
 ```
