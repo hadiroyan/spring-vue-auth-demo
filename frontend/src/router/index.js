@@ -40,7 +40,45 @@ const router = createRouter({
   routes,
 });
 
-let isAuthenticated = false;
+let authCheckPromise = null;
+let isAuthenticated = null;
+
+async function checkAuth() {
+  if (authCheckPromise) {
+    return authCheckPromise;
+  }
+
+  if (isAuthenticated !== null) {
+    return isAuthenticated;
+  }
+
+  authCheckPromise = api
+    .get("/auth/me")
+    .then(() => {
+      isAuthenticated = true;
+      return true;
+    })
+    .catch((err) => {
+      console.warn("Auth check failed:", err);
+      isAuthenticated = false;
+      return false;
+    })
+    .finally(() => {
+      authCheckPromise = null;
+    });
+
+  return authCheckPromise;
+}
+
+function resetAuthState() {
+  isAuthenticated = null;
+  authCheckPromise = null;
+}
+
+function setIsAuthenticated(value) {
+  isAuthenticated = value;
+  authCheckPromise = null;
+}
 
 router.beforeEach(async (to, from, next) => {
   if (to.path === "/auth/callback") {
@@ -48,33 +86,17 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
-  // Require auth path
-  if (to.meta.requiresAuth) {
-    if (to.name === "Login") {
-      return next();
-    }
+  const loggedIn = await checkAuth();
 
-    try {
-      await api.get("/auth/me");
-      isAuthenticated = true;
-      next();
-    } catch (err) {
-      isAuthenticated = false;
-      next("/login");
-    }
+  if (to.meta.requiresAuth && !loggedIn) {
+    return next("/login");
   }
 
-  // Guest path
-  else if (to.meta.requiresGuest) {
-    try {
-      await api.get("/auth/me");
-      next("/dashboard");
-    } catch (err) {
-      next();
-    }
-  } else {
-    next();
+  if (to.meta.requiresGuest && loggedIn) {
+    return next("/dashboard");
   }
+
+  next();
 });
 
-export default router;
+export { router as default, resetAuthState, setIsAuthenticated };

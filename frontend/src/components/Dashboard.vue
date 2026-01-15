@@ -54,6 +54,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '../api'
+import { resetAuthState } from '../router'
 
 const router = useRouter();
 const error = ref(null)
@@ -76,8 +77,13 @@ onMounted(async () => {
 })
 
 const handleLogout = async () => {
-    // Logout logic
-    await api.post('/auth/logout');
-    router.push('/login')
+    try {
+        await api.post("/auth/logout");
+        resetAuthState();
+    } catch (err) {
+        console.error("Logout failed", err);
+    } finally {
+        router.push("/login");
+    }
 };
 </script>

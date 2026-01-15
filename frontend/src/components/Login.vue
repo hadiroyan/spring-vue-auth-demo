@@ -96,6 +96,7 @@ import api from '../api'
 
 import eye from '../assets/visibility-gray-500.svg'
 import eyeOff from '../assets/visibility_off-gray-500.svg'
+import { setIsAuthenticated } from '../router';
 
 const router = useRouter();
 const loginForm = reactive({
@@ -113,6 +114,7 @@ const handleLogin = async () => {
         // console.log('Login:', loginForm);
         const response = await api.post('/auth/login', loginForm);
         console.log(response.data);
+        setIsAuthenticated(true);
 
         // Go to dashboard
         router.push('/dashboard');

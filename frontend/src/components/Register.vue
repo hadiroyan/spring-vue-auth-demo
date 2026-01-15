@@ -121,6 +121,7 @@ import api from '../api';
 
 import eye from '../assets/visibility-gray-500.svg'
 import eyeOff from '../assets/visibility_off-gray-500.svg'
+import { setIsAuthenticated } from '../router';
 
 const error = ref(null);
 const showPassword = ref(false);
@@ -140,6 +141,7 @@ const handleRegister = async () => {
         console.log('Register:', registerForm);
         const response = await api.post('/auth/register', registerForm);
         console.log(response.data);
+        setIsAuthenticated(true);
 
         // Go to dashboard
         router.push('/dashboard');
