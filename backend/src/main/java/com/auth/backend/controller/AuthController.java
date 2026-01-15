@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,8 +58,14 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getCurrentUser(Authentication authentication) {
-        return ResponseEntity.ok(Map.of(
-                "email", authentication.getName(),
-                "authorities", authentication.getAuthorities().toString()));
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.info("request is not authenticated");
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
+        } else {
+            log.info("request is authenticated");
+            return ResponseEntity.ok(Map.of(
+                    "email", authentication.getName(),
+                    "authorities", authentication.getAuthorities().toString()));
+        }
     }
 }
