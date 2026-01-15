@@ -15,6 +15,7 @@ A simple authentication demo project using Spring Boot as backend and Vue.js 3 w
 
 - Vue.js 3
 - Vite
+- Tailwind CSS
 
 ## Project Structure
 
@@ -43,19 +44,34 @@ Prerequisites
 - Maven
 - PostgreSQL
 
-#### Environment Configuration
+#### Environtment Configuration
 
-```bash
-cd backend
-cp src/main/resources/application-example.properties src/main/resources/application.properties
+Create a .env file inside the backend folder, then copy the configuration below and fill in the required values:
+
+```env
+# Database
+DATABASE_URL=
+DATABASE_USER=
+DATABASE_PASSWORD=
+
+# OAuth2 - Google
+GOOGLE_OAUTH2_CLIENT_ID=
+GOOGLE_OAUTH2_CLIENT_SECRET=
 ```
 
-Enter values in application.properties
+⚠️ Note:  
+Do not commit the .env file to the repository.  
+Make sure it is listed in .gitignore.
+
+#### JWT Key Configuration
+
+Generate an RSA private key and public key for Spring Security (JWT signing).
+
+Save the keys in the following directory:
 
 ```text
-!IMPORTANT
-Create a private key and public key for Spring Security.
-Then save it in backend/src/main/resources/keys
+backend/src/main/resources/keys/public.pem
+backend/src/main/resources/keys/private.pem
 ```
 
 #### Run Backend
@@ -87,3 +103,15 @@ npm run dev
 ```
 
 Frontend will run at: http://localhost:5173
+
+## API Endpoints
+
+| Method | Endpoint                       | Description                                     |
+| ------ | ------------------------------ | ----------------------------------------------- |
+| POST   | `/api/auth/login`              | Authenticate user using username and password   |
+| POST   | `/api/auth/register`           | Register a new user with username and password  |
+| POST   | `/api/auth/refresh`            | Refresh access token using refresh token        |
+| GET    | `/api/auth/me`                 | Get currently authenticated user information    |
+| POST   | `/api/auth/logout`             | Logout user and invalidate authentication token |
+| GET    | `/api/users/profile`           | Get authenticated user profile details          |
+| GET    | `/oauth2/authorization/google` | Redirect user to Google OAuth2 login page       |
