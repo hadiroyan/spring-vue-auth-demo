@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Configuration
-/src/main/resources/application.properties
+.env
 
 ### Keys
 /src/main/resources/keys/private.pem
