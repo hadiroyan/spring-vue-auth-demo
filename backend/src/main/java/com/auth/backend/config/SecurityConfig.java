@@ -12,36 +12,34 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.auth.backend.handler.OAuth2AuthenticationSuccessHandler;
+import com.auth.backend.service.CustomOAuth2UserService;
 import com.auth.backend.service.CustomUserDetailService;
 import com.auth.backend.util.CookieBearerTokenResolver;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final RSAKeyProperties rsaKeys;
+    private final JwtDecoder jwtDecoder;
     private final CustomUserDetailService userDetailService;
     private final CookieBearerTokenResolver cookieBearerTokenResolver;
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
-    public SecurityConfig(RSAKeyProperties rsaKeys, CustomUserDetailService userDetailService,
-            CookieBearerTokenResolver cookieBearerTokenResolver) {
-        this.rsaKeys = rsaKeys;
+    public SecurityConfig(JwtDecoder jwtDecoder, CustomUserDetailService userDetailService,
+            CookieBearerTokenResolver cookieBearerTokenResolver, CustomOAuth2UserService oAuth2UserService,
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) {
+        this.jwtDecoder = jwtDecoder;
         this.userDetailService = userDetailService;
         this.cookieBearerTokenResolver = cookieBearerTokenResolver;
+        this.oAuth2UserService = oAuth2UserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     }
 
     @Bean
@@ -52,10 +50,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler))
                 .userDetailsService(userDetailService)
                 .oauth2ResourceServer(oauth -> oauth
                         .bearerTokenResolver(cookieBearerTokenResolver)
-                        .jwt(jwt -> jwt.decoder(jwtDecoder())))
+                        .jwt(jwt -> jwt.decoder(jwtDecoder)))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -83,20 +85,5 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(rsaKeys.getPublicKey()).build();
-    }
-
-    @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeys.getPublicKey())
-                .privateKey(rsaKeys.getPrivateKey())
-                .build();
-
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
     }
 }
