@@ -51,6 +51,14 @@
                     </button>
                 </form>
 
+                <!-- Google OAuth Login -->
+                <button
+                    class="w-full mt-4 bg-gray-200 text-gray-600 hover:bg-blue-600 hover:text-white rounded-lg font-semibold p-3 flex items-center justify-center gap-2"
+                    @click="loginWithGoogle">
+                    <img src="../assets/google-24.svg" alt="Google" />
+                    Login with Google
+                </button>
+
                 <!-- Sign Up Link -->
                 <p class="mt-6 text-center text-gray-600">
                     Don't have an account?
@@ -62,7 +70,7 @@
 
             <!-- Right Side -->
             <div
-                class="hidden md:flex md:w-1/2 bg-linear-to-br from-blue-600 to-blue-700 p-12 items-center justify-center text-white relative overflow-hidden">
+                class="hidden md:flex md:w-1/2 bg-linear-to-br from-blue-800 to-blue-600 p-12 items-center justify-center text-white relative overflow-hidden">
                 <div class="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
                 <div class="absolute bottom-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
 
@@ -112,6 +120,10 @@ const handleLogin = async () => {
         error.value = 'User failed to login'
         console.error(`Failed login ${err}`)
     }
+};
+
+const loginWithGoogle = () => {
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
 };
 
 const togglePassword = () => {

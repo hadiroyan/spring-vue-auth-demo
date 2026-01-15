@@ -3,11 +3,17 @@ import api from "../api";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 import Dashboard from "../components/Dashboard.vue";
+import AuthCallback from "../components/AuthCallback.vue";
 
 const routes = [
   {
     path: "/",
     redirect: "/dashboard",
+  },
+  {
+    path: "/auth/callback",
+    name: "AuthCallback",
+    component: AuthCallback,
   },
   {
     path: "/login",
@@ -37,6 +43,11 @@ const router = createRouter({
 let isAuthenticated = false;
 
 router.beforeEach(async (to, from, next) => {
+  if (to.path === "/auth/callback") {
+    next();
+    return;
+  }
+
   // Require auth path
   if (to.meta.requiresAuth) {
     if (to.name === "Login") {
